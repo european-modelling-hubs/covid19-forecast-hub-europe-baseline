@@ -20,6 +20,7 @@ hub_horizon <- max(get_hub_config("horizon", config_file)[["values"]])
 hub_targets <- get_hub_config("target_variables", config_file)
 
 forecast_date <- today()
+wday(forecast_date) <- get_hub_config("forecast_week_day", config_file)
 
 raw_truth <- covidHubUtils::load_truth(
   truth_source = "JHU",
