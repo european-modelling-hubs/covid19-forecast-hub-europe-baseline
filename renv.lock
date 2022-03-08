@@ -22,9 +22,9 @@
       "RemoteUsername": "covid19-forecast-hub-europe",
       "RemoteRepo": "EuroForecastHub",
       "RemoteRef": "main",
-      "RemoteSha": "33ad1fef78939313748aae996abda884e9d8c6c9",
-      "Remotes": "reichlab/covidHubUtils, reichlab/covidModels/R-package,\n    anthonynorth/roxyglobals",
-      "Hash": "f4dbeacf98b7f3a9d88d1878bd12230a",
+      "RemoteSha": "fabe26a3d54d9bfb15c9ff8c5227313cdd32dad9",
+      "Remotes": "reichlab/covidHubUtils, anthonynorth/roxyglobals",
+      "Hash": "fe1b9d85779196adf91f8f931a58b8aa",
       "Requirements": [
         "cNORM",
         "covidHubUtils",
