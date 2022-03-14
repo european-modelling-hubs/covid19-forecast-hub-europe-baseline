@@ -20,17 +20,15 @@ hub_quantiles <- get_hub_config("forecast_type", config_file)[["quantiles"]]
 hub_horizon <- max(get_hub_config("horizon", config_file)[["values"]])
 hub_targets <- get_hub_config("target_variables", config_file)
 
-# forecast_date <- today()
-# wday(forecast_date) <- get_hub_config("forecast_week_day", config_file)
-forecast_date <- ymd("2021-12-20")
+forecast_date <- today()
+wday(forecast_date) <- get_hub_config("forecast_week_day", config_file)
 
 raw_truth <- covidHubUtils::load_truth(
   truth_source = "JHU",
   temporal_resolution = "weekly",
   truth_end_date = as.character(forecast_date - 1),
   hub = "ECDC"
-) %>%
-  filter(target_end_date <= forecast_date)
+)
 
 baseline_forecast <- raw_truth %>%
   filter(!is.na(value)) %>%
