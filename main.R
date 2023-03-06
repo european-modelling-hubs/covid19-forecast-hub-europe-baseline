@@ -28,7 +28,9 @@ raw_truth <- covidHubUtils::load_truth(
   temporal_resolution = "weekly",
   truth_end_date = as.character(forecast_date - 1),
   hub = "ECDC"
-)
+) |>
+  EuroForecastHub::add_hosp_status() |>
+  dplyr::filter(status == "final")
 
 baseline_forecast <- raw_truth %>%
   filter(!is.na(value)) %>%
