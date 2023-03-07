@@ -29,10 +29,10 @@
       "RemoteUsername": "covid19-forecast-hub-europe",
       "RemoteRepo": "EuroForecastHub",
       "RemoteRef": "main",
-      "RemoteSha": "683867f1ec85a78f4e8e392380af4aec0e6651e8",
+      "RemoteSha": "55aad4d05354047586491c1dcddbfa4d8123585e",
       "RemoteHost": "api.github.com",
       "Remotes": "reichlab/covidHubUtils, anthonynorth/roxyglobals",
-      "Hash": "2eabc01dfa5a370422b712e13b1a8626",
+      "Hash": "b842e27e6df33af00e1fe2b5181a39d8",
       "Requirements": [
         "cNORM",
         "covidHubUtils",

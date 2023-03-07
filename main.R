@@ -7,7 +7,10 @@ library(readr)
 library(EuroForecastHub)
 source(here("R", "build_baseline.R"))
 
-config_file <- "https://github.com/covid19-forecast-hub-europe/covid19-forecast-hub-europe/raw/main/project-config.json"
+config_file <- paste0(
+  "https://github.com/covid19-forecast-hub-europe/",
+  "covid19-forecast-hub-europe/raw/main/project-config.json"
+)
 
 model_name <- get_hub_config("baseline", config_file)[["name"]]
 
@@ -29,22 +32,34 @@ raw_truth <- covidHubUtils::load_truth(
   truth_end_date = as.character(forecast_date - 1),
   hub = "ECDC"
 ) |>
-  EuroForecastHub::add_hosp_status() |>
-  dplyr::filter(status == "final")
+  EuroForecastHub::add_hosp_status()
 
-baseline_forecast <- raw_truth %>%
-  filter(!is.na(value)) %>%
-  group_by(location, target_variable) %>%
-  group_map(
-    ~ full_join(
+max_horizon <- raw_truth |>
+  dplyr::group_by(location, target_variable) |>
+  dplyr::summarise(
+    weeks_cutoff = sum(status == "expecting revisions"), .groups = "drop"
+  ) |>
+  dplyr::mutate(max_horizon = hub_horizon + weeks_cutoff) |>
+  dplyr::select(-weeks_cutoff)
+
+baseline_forecast <- raw_truth  |>
+  dplyr::filter(status == "final") |>
+  dplyr::filter(!is.na(value)) |>
+  dplyr::inner_join(max_horizon, by = c("location", "target_variable")) |>
+  dplyr::group_by(location, target_variable) |>
+  dplyr::group_map(
+    ~ dplyr::full_join(
       .y,
-      build_baseline(.x$value, quantiles = hub_quantiles, horizon = hub_horizon),
+      build_baseline(
+        .x$value, quantiles = hub_quantiles, horizon = unique(.x$max_horizon)
+      ),
       by = character()
-    )
-  ) %>%
-  bind_rows() %>%
-  filter(type %in% substr(hub_targets, 1, 3)) %>%
-  mutate(type = "quantile")
+    ) |>
+      dplyr::mutate(horizon = horizon - max(horizon) + hub_horizon)
+  ) |>
+  dplyr::bind_rows() |>
+  dplyr::filter(type %in% substr(hub_targets, 1, 3)) |>
+  dplyr::mutate(type = "quantile")
 
-format_ensemble(baseline_forecast, forecast_date) %>%
+format_ensemble(baseline_forecast, forecast_date) |>
   write_csv(paste0(model_folder, "/", forecast_date, "-", model_name, ".csv"))
