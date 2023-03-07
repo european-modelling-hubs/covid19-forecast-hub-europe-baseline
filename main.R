@@ -37,13 +37,13 @@ raw_truth <- covidHubUtils::load_truth(
 max_horizon <- raw_truth |>
   dplyr::group_by(location, target_variable) |>
   dplyr::summarise(
-    weeks_cutoff = sum(status == "expecting revisions"), .groups = "drop"
+    weeks_cutoff = sum(!grepl("final", status)), .groups = "drop"
   ) |>
   dplyr::mutate(max_horizon = hub_horizon + weeks_cutoff) |>
   dplyr::select(-weeks_cutoff)
 
 baseline_forecast <- raw_truth  |>
-  dplyr::filter(status == "final") |>
+  dplyr::filter(grepl("final", status)) |>
   dplyr::filter(!is.na(value)) |>
   dplyr::inner_join(max_horizon, by = c("location", "target_variable")) |>
   dplyr::group_by(location, target_variable) |>
