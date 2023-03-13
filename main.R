@@ -32,7 +32,7 @@ raw_truth <- covidHubUtils::load_truth(
   truth_end_date = as.character(forecast_date - 1),
   hub = "ECDC"
 ) |>
-  EuroForecastHub::add_hosp_status()
+  EuroForecastHub::add_status()
 
 max_horizon <- raw_truth |>
   dplyr::group_by(location, target_variable) |>
