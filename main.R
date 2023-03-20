@@ -48,12 +48,11 @@ baseline_forecast <- raw_truth  |>
   dplyr::inner_join(max_horizon, by = c("location", "target_variable")) |>
   dplyr::group_by(location, target_variable) |>
   dplyr::group_map(
-    ~ dplyr::full_join(
+    ~ dplyr::cross_join(
       .y,
       build_baseline(
         .x$value, quantiles = hub_quantiles, horizon = unique(.x$max_horizon)
-      ),
-      by = character()
+      )
     ) |>
       dplyr::mutate(horizon = horizon - max(horizon) + hub_horizon)
   ) |>
