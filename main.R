@@ -27,7 +27,6 @@ forecast_date <- today()
 wday(forecast_date) <- get_hub_config("forecast_week_day", config_file)
 
 raw_truth <- covidHubUtils::load_truth(
-  truth_source = "JHU",
   temporal_resolution = "weekly",
   truth_end_date = as.character(forecast_date - 1),
   hub = "ECDC"
